@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Grade Test</title>
+    <link rel="shortcut icon" href="log.png" type="image/x-icon">
+    <style>
+        img.bg-image {
+            display: flex;
+            margin: 2% auto;
+        }
+
+        ul {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        body {
+            background-color: #e3d8c6;
+        }
+
+        .users {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background-color: #eae9e8;
+            height: 87%;
+            width: 37%;
+        }
+
+        .inp {
+            width: 35%;
+            margin-bottom: 15px;
+            padding: 1% 6%;
+        }
+
+        .inputs:hover {
+            background-color: rgba(0, 0, 0, 0.63);
+            color: #eae9e8;
+        }
+
+        .input:hover {
+            background-color: rgba(0, 0, 0, 0.63);
+            color: #eae9e8;
+        }
+
+        .inputs {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0px auto;
+            padding: 1% 7%;
+        }
+
+        .input {
+            padding: 1% 4%;
+        }
+
+        label.lab {
+            padding-right: 10%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="calci">
+            <div><img class="bg-image" src="bg-img.jpg" alt="">
+                <div class="users">
+                    <h1>Student Grade Calculator</h1>
+                    <form class="info" id="student-form">
+                        <label for="name">Student Name:</label>
+                        <input type="text" class="inp" id="name" placeholder="Enter Student Name"><br>
+                        <label class="lab" for="grade">Grade:</label>
+                        <input type="number" id="grade" class="inp" placeholder="Enter Student Grade" required min="0"
+                            max="100"><br>
+                        <button class="inputs" id="add-btn">Add Student</button><br>
+                    </form>
+                    <button class="input" id="calculate-btn">Calculate Grades</button>
+                    <div id="result"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let students = [];
+
+        // Function to add student to the array
+        function addStudent(name, grade) {
+            students.push({ name, grade });
+        }
+
+        // Function to calculate average grade
+        function calculateAverage() {
+            const sum = students.reduce((acc, student) => acc + student.grade, 0);
+            return sum / students.length;
+        }
+
+        // Function to find highest grade
+        function findHighestGrade() {
+            return Math.max(...students.map(student => student.grade));
+        }
+
+        // Function to find lowest grade
+        function findLowestGrade() {
+            return Math.min(...students.map(student => student.grade));
+        }
+
+        // Event listener for add student button
+        document.getElementById('add-btn').addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const grade = parseFloat(document.getElementById('grade').value);
+            addStudent(name, grade);
+            document.getElementById('name').value = '';
+            document.getElementById('grade').value = '';
+        });
+
+        // Event listener for calculate grades button
+        document.getElementById('calculate-btn').addEventListener('click', () => {
+            if (students.length === 0) {
+                document.getElementById('result').innerHTML = 'No students added!';
+                return;
+            }
+
+            const average = calculateAverage();
+            const highest = findHighestGrade();
+            const lowest = findLowestGrade();
+
+            // Display student grades
+            let studentGradesHTML = '<h2>Student Grades:</h2><ul>';
+            students.forEach(student => {
+                studentGradesHTML += `<li>${student.name}: ${student.grade}</li>`;
+            });
+            studentGradesHTML += '</ul>';
+
+            // Display results
+            const resultHTML = `
+        ${studentGradesHTML}
+        <h2>Results:</h2>
+        <p>Average Grade: ${average.toFixed(2)}</p>
+        <p>Highest Grade: ${highest} (achieved by ${students.find(student => student.grade === highest).name})</p>
+        <p>Lowest Grade: ${lowest} (achieved by ${students.find(student => student.grade === lowest).name})</p>
+    `;
+
+            document.getElementById('result').innerHTML = resultHTML;
+        });
+    </script>
+</body>
+
+</html>
